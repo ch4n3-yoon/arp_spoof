@@ -13,6 +13,7 @@ import scapy.plist as plist
 from scapy.utils import *	# PcapReader
 from scapy.data import *	# MTU, ETH_P_ARP
 
+
 """
 made by ch4n3
 to connect to me, send email to chaneyoon[at]gmail[dot]com
@@ -27,6 +28,9 @@ arp_spoof <interface> <sender ip 1> <target ip 1> [<sender ip 2> <target ip 2>..
 
 """
 
+
+# ARP Hardware Type
+ETHERNET = 0x01
 
 # ARP Operation Code
 ARP_REQUEST		= 0x1
