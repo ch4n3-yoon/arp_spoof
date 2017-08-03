@@ -1,4 +1,15 @@
 #! /usr/bin/python
 # coding: utf-8
+import sys
+import scapy.all import *
 
-print "Hello World"
+"""
+
+made by ch4n3
+to connect to me, send email to chaneyoon[at]gmail[dot]com
+blog : http://chaneyoon.tistory.com/
+wargame : http://ch4n3.dothome.co.kr/
+
+"""
+
+
