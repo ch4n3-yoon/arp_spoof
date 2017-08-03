@@ -1,9 +1,10 @@
 #! /usr/bin/python
 # coding: utf-8
 import sys
+import fcntl, socket, struct
+
 
 """
-
 made by ch4n3
 to connect to me, send email to chaneyoon[at]gmail[dot]com
 blog : http://chaneyoon.tistory.com/
@@ -17,6 +18,13 @@ arp_spoof <interface> <sender ip 1> <target ip 1> [<sender ip 2> <target ip 2>..
 
 """
 
+
+def get_mac_address(ifname):
+	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+	info = fcntl.ioctl(s.fileno(), 0x8927,  struct.pack('256s', ifname[:15]))
+	return ':'.join(['%02x' % ord(char) for char in info[18:24]])
+
+
 if __name__ == "__main__":
 	
 	# check argc
@@ -26,9 +34,8 @@ if __name__ == "__main__":
 		
 	# set network interface 
 	interface = sys.argv[1]
-
 	print "[*] your interface : {0}".format(interface)
-
-
-
+	
+	my_mac_address = get_mac_address(interface)
+	print "[*] Mac Address : {0}".format(my_mac_address)
 
