@@ -2,7 +2,7 @@
 # coding: utf-8
 import sys
 import fcntl, socket, struct
-
+import getpass
 
 """
 made by ch4n3
@@ -18,11 +18,20 @@ arp_spoof <interface> <sender ip 1> <target ip 1> [<sender ip 2> <target ip 2>..
 
 """
 
-
 def get_mac_address(ifname):
 	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	info = fcntl.ioctl(s.fileno(), 0x8927,  struct.pack('256s', ifname[:15]))
 	return ':'.join(['%02x' % ord(char) for char in info[18:24]])
+
+
+# function to check user name
+def isRoot():
+	username = getpass.getuser()
+	
+	if username == "root":
+		return 0
+	else:
+		return 1
 
 
 if __name__ == "__main__":
@@ -45,4 +54,15 @@ if __name__ == "__main__":
 		# user input invalid value
 
 		print "[-] Your network interface is invalid"
+
+	if isRoot() == 1:
+		# username is not 'root'
+		print "[-] You must be system root"
+		sys.exit(1)
+
+
+	
+
+
+
 
