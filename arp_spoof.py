@@ -75,6 +75,13 @@ if __name__ == "__main__":
 	
 		sys.exit(ERROR);
 
+	# check whether username is 'root' or not.
+	if isRoot() == 1:
+		# username is not 'root'
+		print "[-] You must be system root"
+		
+		sys.exit(ERROR)
+
 
 	# set network interface 
 	interface = sys.argv[1]
@@ -82,18 +89,14 @@ if __name__ == "__main__":
 	# get mac address from network interface
 	try:
 		my_mac_address = get_mac_address(interface)
-
+		print "[*] Network Interfae : {0}".format(interface)
 		print "[*] Mac Address : {0}".format(my_mac_address)
+
 	except IOError as e:
 		# if this code execute,
 		# user input invalid value
 
 		print "[-] Your network interface is invalid"
-
-	if isRoot() == 1:
-		# username is not 'root'
-		print "[-] You must be system root"
-		sys.exit(1)
 
 
 	
