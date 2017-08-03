@@ -3,6 +3,15 @@
 import sys
 import fcntl, socket, struct
 import getpass
+import os
+import threading
+import signal
+
+from scapy.all import *
+from scpay.base_classes import Gen, Set Gen
+import scapy.plist as plist
+from scapy.utils import *	# PcapReader
+from scapy.data import *	# MTU, ETH_P_ARP
 
 """
 made by ch4n3
