@@ -6,6 +6,7 @@ import getpass
 import os
 import threading
 import signal
+from time import sleep
 
 from scapy.all import *
 
@@ -55,6 +56,27 @@ def isRoot():
 		return 1
 
 
+# sniffing ARP Packet
+def sniffARP():
+	result = sniff(filter="arp", count=1)
+	print result.summary()
+
+	return result
+
+
+# get remote mac address by making thread
+def get_remote_mac_address( sender_ip ):
+	
+	# create ARP Packet
+	packet = ARP(op=ARP_REQUEST, psrc="192.168.52.2", pdst=sender_ip)
+
+	# send 20 packets to get mac address
+	for _ in range(20):
+		send(packet)
+
+
+	
+
 if __name__ == "__main__":
 	
 	# Print options
@@ -63,6 +85,7 @@ if __name__ == "__main__":
 			print "[*] Help page\n"
 			print "=" * 10 + " OPTION " + "=" * 10
 			print "\n\t-h : view help"
+			print "\t-a : get all mac address in LAN"
 			print "\n" + "=" * (11 * 2 + len("OPTION"))
 			print "\nUsage : arp_spoof.py <interface> <sender ip> <target ip>\n"
 		
@@ -75,6 +98,7 @@ if __name__ == "__main__":
 	
 		sys.exit(ERROR);
 
+
 	# check whether username is 'root' or not.
 	if isRoot() == 1:
 		# username is not 'root'
@@ -85,6 +109,11 @@ if __name__ == "__main__":
 
 	# set network interface 
 	interface = sys.argv[1]
+
+	# set sender, target ip
+	sender_ip = sys.argv[2]
+	target_ip = sys.argv[3]
+
 
 	# get mac address from network interface
 	try:
@@ -98,8 +127,16 @@ if __name__ == "__main__":
 
 		print "[-] Your network interface is invalid"
 
-
 	
+	# create threads to get remote mac address
+	t1 = threading.Thread(target=get_remote_mac_address, args=(sender_ip,))
+	t2 = threading.Thread(target=sniffARP)
+
+	t1.start()
+	t2.start()
+
+	# print result.summary()
+	print "done"
 
 
 
