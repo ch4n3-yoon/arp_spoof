@@ -58,8 +58,8 @@ def isRoot():
 
 # sniffing ARP Packet
 def sniffARP():
-	result = sniff(filter="arp", count=1)
-	print result.summary()
+	result = sniff(filter="arp", count=5)
+	print result[0]
 
 	return result
 
@@ -70,8 +70,8 @@ def get_remote_mac_address( sender_ip ):
 	# create ARP Packet
 	packet = ARP(op=ARP_REQUEST, psrc="192.168.52.2", pdst=sender_ip)
 
-	# send 20 packets to get mac address
-	for _ in range(20):
+	# send 6 packets to get mac address
+	for _ in range(10):
 		send(packet)
 
 
@@ -132,8 +132,13 @@ if __name__ == "__main__":
 	t1 = threading.Thread(target=get_remote_mac_address, args=(sender_ip,))
 	t2 = threading.Thread(target=sniffARP)
 
+	print "\n\n"
+	print "#"*5 + " get mac address of SENDER " + "#"*5
+	print "\n"
 	t1.start()
 	t2.start()
+
+
 
 	# print result.summary()
 	print "done"
