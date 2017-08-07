@@ -6,7 +6,7 @@ import getpass
 import os
 import threading
 import signal
-from time import sleep
+import argparse
 
 from scapy.all import *
 
@@ -94,7 +94,7 @@ if __name__ == "__main__":
 
 	# Check argc
 	if len(sys.argv) < 4:
-		print "[*] arp_spoof.py <interface> <sender ip> <target ip>"
+		print "[*] Usage : arp_spoof.py <interface> <sender ip> <target ip>"
 	
 		sys.exit(ERROR);
 
