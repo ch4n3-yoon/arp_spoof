@@ -65,14 +65,9 @@ def sniffARP():
 
 
 # get remote mac address by making thread
-def get_remote_mac_address( sender_ip ):
-	
-	# create ARP Packet
-	packet = ARP(op=ARP_REQUEST, psrc="192.168.52.2", pdst=sender_ip)
-
-	# send 6 packets to get mac address
-	for _ in range(10):
-		send(packet)
+def get_remote_mac_address( interface, sender_ip ):
+	result = sr(ARP( op=ARP_REQUEST , psrc="10.1.1.99", pdst="10.1.1.1"))
+	return result[0][ARP][0][1].hwsrc
 
 
 	
@@ -127,17 +122,14 @@ if __name__ == "__main__":
 
 		print "[-] Your network interface is invalid"
 
-	
-	# create threads to get remote mac address
-	t1 = threading.Thread(target=get_remote_mac_address, args=(sender_ip,))
-	t2 = threading.Thread(target=sniffARP)
 
 	print "\n\n"
 	print "#"*5 + " get mac address of SENDER " + "#"*5
 	print "\n"
-	t1.start()
-	t2.start()
+	# t1.start()
+	# t2.start()
 
+	sender_mac = get_remote_mac_address(interface, sender_ip)
 
 
 	# print result.summary()
