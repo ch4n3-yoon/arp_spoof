@@ -7,6 +7,7 @@ import os
 import threading
 import signal
 import argparse
+import socket	# getting IP address
 
 from scapy.all import *
 
@@ -39,11 +40,17 @@ ERROR = 1
 
 
 
-def get_mac_address(ifname):
+def get_my_mac_address(ifname):
 	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	info = fcntl.ioctl(s.fileno(), 0x8927,  struct.pack('256s', ifname[:15]))
 	return ':'.join(['%02x' % ord(char) for char in info[18:24]])
 
+
+def get_my_ip_address():
+	hostname = socket.gethostname()
+	ip = socket.gethostbyname(hostname)
+
+	return ip
 
 
 # function to check user name
@@ -91,7 +98,7 @@ if __name__ == "__main__":
 	if len(sys.argv) < 4:
 		print "[*] Usage : arp_spoof.py <interface> <sender ip> <target ip>"
 	
-		sys.exit(ERROR);
+		sys.exit(ERROR)
 
 
 	# check whether username is 'root' or not.
@@ -110,9 +117,13 @@ if __name__ == "__main__":
 	target_ip = sys.argv[3]
 
 
+	# get ip address
+	my_ip_address = get_my_ip_address()
+
+
 	# get mac address from network interface
 	try:
-		my_mac_address = get_mac_address(interface)
+		my_mac_address = get_my_mac_address(interface)
 		print "[*] Network Interfae : {0}".format(interface)
 		print "[*] Mac Address : {0}".format(my_mac_address)
 
