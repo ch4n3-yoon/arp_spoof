@@ -47,10 +47,16 @@ def get_my_mac_address(ifname):
 
 
 def get_my_ip_address():
-	hostname = socket.gethostname()
-	ip = socket.gethostbyname(hostname)
+	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+	s.connect(('google.com', 0))
+	return s.getsockname()[0]
 
-	return ip
+
+
+# get remote mac address by making thread
+def get_remote_mac_address(my_ip, sender_ip):
+	result = sr(ARP( op=ARP_REQUEST , psrc=my_ip, pdst=sender_ip), timeout=1)
+	return result[0][ARP][0][1].hwsrc
 
 
 # function to check user name
@@ -71,10 +77,7 @@ def sniffARP():
 	return result
 
 
-# get remote mac address by making thread
-def get_remote_mac_address( interface, sender_ip ):
-	result = sr(ARP( op=ARP_REQUEST , psrc="10.1.1.99", pdst="10.1.1.1"))
-	return result[0][ARP][0][1].hwsrc
+
 
 
 	
@@ -125,6 +128,7 @@ if __name__ == "__main__":
 	try:
 		my_mac_address = get_my_mac_address(interface)
 		print "[*] Network Interfae : {0}".format(interface)
+		print "[*] IP Address : {0}".format(my_ip_address)
 		print "[*] Mac Address : {0}".format(my_mac_address)
 
 	except IOError as e:
@@ -137,14 +141,22 @@ if __name__ == "__main__":
 	print "\n\n"
 	print "#"*5 + " get mac address of SENDER " + "#"*5
 	print "\n"
-	# t1.start()
-	# t2.start()
 
-	sender_mac = get_remote_mac_address(interface, sender_ip)
+	sender_mac = get_remote_mac_address(my_ip_address, sender_ip)
+	print "[*] Sender mac address : {0}".format(sender_mac)
 
+	print "\n"
+	print "#"*10 + "#"*len(" get mac address of SENDER ")
 
-	# print result.summary()
-	print "done"
+	print "\n\n"
+	print "#" * 5 + " get mac address of TARGET " + "#" * 5
+	print "\n"
+
+	target_mac = get_remote_mac_address(my_ip_address, target_ip)
+	print "[*] Sender mac address : {0}".format(target_mac)
+
+	print "\n"
+	print "#" * 10 + "#" * len(" get mac address of SENDER ")
 
 
 
